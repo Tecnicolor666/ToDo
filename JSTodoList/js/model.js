@@ -1,69 +1,40 @@
-export default class Model {
+import Alert from './alert.js';
+
+export default class Modal {
   constructor() {
-    this.view = null;
-    this.todos = JSON.parse(localStorage.getItem('todos'));
-    if (!this.todos || this.todos.length < 1) {
-      this.todos = [
-        {
-          id: 0,
-          title: 'Learn JS',
-          description: 'Watch JS Tutorials',
-          completed: false,
-        }
-      ]
-      this.currentId = 1;
-    } else {
-      this.currentId = this.todos[this.todos.length - 1].id + 1;
-    }
+    this.title = document.getElementById('modal-title');
+    this.description = document.getElementById('modal-description');
+    this.completed = document.getElementById('modal-completed');
+    this.difficulty = document.getElementById('modal-difficulty'); // Campo de dificultad en el modal
+    this.btn = document.getElementById('modal-btn');
+    this.alert = new Alert('modal-alert');
+    this.todo = null;
   }
 
-  setView(view) {
-    this.view = view;
+  setValues(todo) {
+    this.todo = todo;
+    this.title.value = todo.title;
+    this.description.value = todo.description;
+    this.completed.checked = todo.completed;
+    this.difficulty.value = todo.difficulty; // Configuramos el valor de dificultad
   }
 
-  save() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
-  }
+  onClick(callback) {
+    this.btn.onclick = () => {
+      if (!this.title.value || !this.description.value) {
+        this.alert.show('Title and description are required');
+        return;
+      }
 
-  getTodos() {
-    return this.todos.map((todo) => ({...todo}));
-  }
+      $('#modal').modal('toggle');
 
-  findTodo(id) {
-    return this.todos.findIndex((todo) => todo.id === id);
-  }
-
-  toggleCompleted(id) {
-    const index = this.findTodo(id);
-    const todo = this.todos[index];
-    todo.completed = !todo.completed;
-    this.save();
-  }
-
-  editTodo(id, values) {
-    const index = this.findTodo(id);
-    Object.assign(this.todos[index], values);
-    this.save();
-  }
-
-  addTodo(title, description) {
-    const todo = {
-      id: this.currentId++,
-      title,
-      description,
-      completed: false,
-    }
-
-    this.todos.push(todo);
-    console.log(this.todos);
-    this.save();
-
-    return {...todo};
-  }
-
-  removeTodo(id) {
-    const index = this.findTodo(id);
-    this.todos.splice(index, 1);  
-    this.save();
+      // Pasamos la dificultad junto con los otros valores al callback
+      callback(this.todo.id, {
+        title: this.title.value,
+        description: this.description.value,
+        completed: this.completed.checked,
+        difficulty: this.difficulty.value
+      });
+    };
   }
 }
