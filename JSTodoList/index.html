@@ -15,6 +15,13 @@
     rel="stylesheet"
   />
   <title>JS Todo List</title>
+
+  <style>
+    .difficulty-level.easy { color: green; font-weight: bold; }
+    .difficulty-level.medium { color: orange; font-weight: bold; }
+    .difficulty-level.hard { color: red; font-weight: bold; }
+</style>
+
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -42,12 +49,13 @@
       <form class="form-inline my-2 my-lg-0" id="filters">
         <label class="font-weight-bold text-info mr-3">Filters</label>
         <input type="radio" name="type" value="all" class="mx-1">
-        <label for="male" class="mb-0">All</label>
+        <label for="all" class="mb-0">All</label>
         <input type="radio" name="type" value="completed" class="mx-1">
-        <label for="female" class="mb-0">Completed</label>
+        <label for="completed" class="mb-0">Completed</label>
         <input type="radio" name="type" value="uncompleted" class="mx-1">
-        <label for="other" class="mr-2 mb-0">Uncompleted</label> 
-
+        <label for="uncompleted" class="mr-2 mb-0">Uncompleted</label> 
+    
+        <!-- Campo de búsqueda de palabras -->
         <input
           class="form-control mr-sm-2"
           type="search"
@@ -55,10 +63,20 @@
           placeholder="Words"
           aria-label="Search"
         >
+    
+        <!-- Nuevo selector para filtrar por nivel de dificultad -->
+        <select id="difficulty-filter" class="form-control mx-1">
+            <option value="all">All Difficulties</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+        </select>
+    
         <button class="btn btn-outline-info my-2 my-sm-0" type="submit" id="search">
           Search
         </button>
-      </form>
+    </form>
+    
     </div>
   </nav>
 
@@ -105,6 +123,15 @@
               <textarea class="form-control" id="modal-description" rows="3">
 
               </textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="modal-difficulty">Difficulty</label>
+              <select id="modal-difficulty" class="form-control">
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
             </div>
             <div class="form-group d-inline-flex">
               <label>Completed</label>
@@ -164,6 +191,16 @@
           </div>
         </form>
       </div>
+      <br>
+      <br>
+      <div class="form-group">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty" class="form-control">
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+        </select>
+    </div>      
 
       <div class="mt-5">
         <table class="table table-striped" id="table">
@@ -173,10 +210,19 @@
               <th scope="col">Description</th>
               <th scope="col">
                 <div class="d-flex justify-content-center">
+                  Difficulty Level
+                </div>
+              </th>
+              <th scope="col">
+                <div class="d-flex justify-content-center">
                   Completed
                 </div>
               </th>
-              <th scope="col"></th>
+              <th scope="col">
+                <div class="d-flex justify-content-center">
+                  Actions
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>

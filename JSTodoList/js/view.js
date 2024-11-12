@@ -26,10 +26,10 @@ export default class View {
   }
 
   filter(filters) {
-    const { type, words } = filters;
+    const { type, words, difficulty } = filters;
     const [, ...rows] = this.table.getElementsByTagName('tr');
     for (const row of rows) {
-      const [title, description] = row.children;
+      const [title, description, difficultyCell] = row.children;
       let shouldHide = false;
 
       // Filtro de palabras en título y descripción
@@ -41,8 +41,13 @@ export default class View {
       // Filtro por estado completado
       const shouldBeCompleted = type === 'completed';
       const isCompleted = row.querySelector('input[type="checkbox"]').checked;
-
       if (type !== 'all' && shouldBeCompleted !== isCompleted) {
+        shouldHide = true;
+      }
+
+      // Filtro por dificultad
+      const taskDifficulty = difficultyCell.innerText.trim();
+      if (difficulty !== 'all' && taskDifficulty !== difficulty) {
         shouldHide = true;
       }
 
@@ -54,6 +59,7 @@ export default class View {
       }
     }
 }
+
 
 
   addTodo(title, description, difficulty) {
@@ -84,10 +90,8 @@ export default class View {
     const row = document.createElement('tr');
     row.setAttribute('id', todo.id);
 
-    // Verificamos que 'difficulty' esté definido; si no, asignamos un valor predeterminado
-    const difficulty = todo.difficulty ? todo.difficulty : 'Easy';
+    const difficulty = todo.difficulty || 'Easy'; // Usar dificultad o 'Easy' por defecto
 
-    // Define el contenido de cada celda en el orden correcto
     row.innerHTML = `
         <td>${todo.title}</td>
         <td>${todo.description}</td>
@@ -116,6 +120,7 @@ export default class View {
         title: row.children[0].innerText,
         description: row.children[1].innerText,
         completed: checkbox.checked,
+        difficulty: difficulty // Pasamos el nivel de dificultad actual
     });
 
     // Configurar el botón de eliminación
@@ -125,5 +130,6 @@ export default class View {
     // Añadir la fila a la tabla
     this.table.querySelector('tbody').appendChild(row);
 }
+
 
 }
